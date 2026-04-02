@@ -1,3 +1,5 @@
+"""测试环境变量加载脚本"""
+
 import os
 from dotenv import load_dotenv
 
