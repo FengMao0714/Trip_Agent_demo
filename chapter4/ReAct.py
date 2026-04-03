@@ -1,5 +1,5 @@
-from llm_client import HelloAgentsLLM
-from tools import ToolExecutor, search
+from chapter4.llm_client import HelloAgentsLLM
+from chapter4.tools import ToolExecutor, search
 import re
 # ReAct 提示词模板
 REACT_PROMPT_TEMPLATE = """
