@@ -175,7 +175,7 @@ class HelloAgentsLLM:
 
         elif self.provider == "modelscope":
             resolved_api_key = api_key or os.getenv("MODELSCOPE_API_KEY") or os.getenv("LLM_API_KEY")
-            resolved_base_url = base_url or os.getenv("LLM_BASE_URL") or "https://api-inference.modelscope.cn/v1/"
+            resolved_base_url = base_url or os.getenv("MODELSCOPE_BASE_URL") or "https://dashscope.aliyuncs.com/compatible-mode/v1"
             return resolved_api_key, resolved_base_url
 
         elif self.provider == "kimi":
@@ -226,7 +226,7 @@ class HelloAgentsLLM:
         elif self.provider == "qwen":
             return "qwen-plus"
         elif self.provider == "modelscope":
-            return "Qwen/Qwen2.5-72B-Instruct"
+            return "tongyi-xiaomi-analysis-pro"
         elif self.provider == "kimi":
             return "moonshot-v1-8k"
         elif self.provider == "zhipu":
