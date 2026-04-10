@@ -95,16 +95,26 @@ class MysimpleAgent(SimpleAgent):
 
                 for call in tool_calls:
                     result = self._execute_tool_call(call['tool_name'], call['parameters'])
+
                     tool_results.append(result)
                     # 从响应中移除工具调用指令，替换为工具结果
                     clean_response = clean_response.replace(call['original'], "")
+
+                # ======== 【核心修复点开始】 ========
+                # 1. 去掉可能残留的空格和换行
+                clean_response = clean_response.strip()
+                
+                # 2. 如果清理完后变成了空字符串，给它垫一句话！
+                if not clean_response:
+                    clean_response = "正在执行工具调用，请稍候..."
+                # ======== 【核心修复点结束】 ========
 
                 # 构建包含工具结果的消息
                 messages.append({"role": "assistant", "content": clean_response})
 
                 # 添加工具结果
-                tool_results_text = "\n\n".join(tool_results)
-                messages.append({"role": "assistant", "content": f"工具调用结果:\n{tool_results_text}\n\n请基于这些结果给出完整的回答。"})
+                tool_results_text = "\n\n".join(tool_results) 
+                messages.append({"role": "user", "content": f"工具调用结果:\n{tool_results_text}\n\n请基于这些结果给出完整的回答。"})
 
                 current_iteration += 1
                 continue  # 继续下一轮迭代，允许多轮工具调用
@@ -152,7 +162,7 @@ class MysimpleAgent(SimpleAgent):
             else:
                 # 其他工具可以传入原始参数使用智能参数解析
                 param_dict = self._parse_tool_parameters(tool_name, parameters)
-                tool = self.tool_register.get_tool(tool_name)
+                tool = self.tool_registry.get_tool(tool_name)
                 if not tool:
                     return f"错误：未找到名为 '{tool_name}' 的工具。"
                 result = tool.run(param_dict)
@@ -211,7 +221,7 @@ class MysimpleAgent(SimpleAgent):
         print(f"{self.name}正在流式生成响应...", end="")
         for chunk in self.llm.stream_invoke(messages, **kwargs):
             full_response += chunk
-            print(chunk, end="", flush=True)
+            # print(chunk, end="", flush=True)
             yield chunk
         
         print() # 换行

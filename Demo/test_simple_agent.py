@@ -2,7 +2,6 @@ from dotenv import load_dotenv
 from hello_agents import HelloAgentsLLM, ToolRegistry
 from hello_agents.tools import CalculatorTool
 from my_simple_agent import MysimpleAgent
-from my_llm import MyLLM
 
 # 加载环境变量
 load_dotenv()
@@ -44,7 +43,7 @@ print()
 # 测试3：流式响应
 print("\n=== 测试3：流式响应 ===")
 print("流式响应：", end=" ")
-for chunk in basic_agent.run("请解释什么是Harness engineering"):
+for chunk in basic_agent.stream_run("请解释什么是Harness engineering"):
     pass # 内容已经在stream_run方法中打印了
 
 # 测试4：工具管理功能
