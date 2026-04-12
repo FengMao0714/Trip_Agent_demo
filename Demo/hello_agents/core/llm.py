@@ -288,7 +288,7 @@ class HelloAgentsLLM:
                 content = chunk.choices[0].delta.content or ""
                 if content:
                     print(content, end="", flush=True)
-                    yield content
+                    # yield content
             print()  # 在流式输出结束后换行
 
         except Exception as e:
