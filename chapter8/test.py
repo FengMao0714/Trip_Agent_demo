@@ -1,23 +1,42 @@
-import os
-from dotenv import load_dotenv
+# 配置好同级文件夹下.env中的大模型API
 
-# 1. 强行雷达搜索并加载 .env
+from dotenv import load_dotenv
+import os
+
+# 加载环境变量
 load_dotenv()
 
-# 2. X光检测一：看看 Python 到底读到 Key 没有？
-api_key = os.getenv("EMBED_API_KEY")
-if api_key:
-    print(f"【X光测试 1】成功读到 Key: {api_key[:5]}...{api_key[-4:]}") # 截取头尾，防止泄露
-else:
-    print("【X光测试 1】失败！读到的 Key 是 None，说明 .env 没加载上！")
+os.environ["EMBED_API_KEY"] = "sk-2145b485510a4108bd13268e46ea9f54"
+os.environ["EMBED_MODEL_TYPE"] = "dashscope"
+os.environ["EMBED_MODEL_NAME"] = "text-embedding-v3"
 
-# 3. X光检测二：看看 dashscope 库到底装了没有？
-try:
-    import dashscope
-    print(f"【X光测试 2】dashscope 库正常，版本: {dashscope.__version__}")
-except ImportError:
-    print("【X光测试 2】失败！当前虚拟环境没装 dashscope，请执行 pip install dashscope")
+from hello_agents import SimpleAgent, HelloAgentsLLM, ToolRegistry
+from hello_agents.tools import MemoryTool, RAGTool
 
-print("-" * 40) # 分割线
+# 创建LLM实例
+llm = HelloAgentsLLM()
 
-# ... 下面保留你原本的 main.py 代码（比如 from hello_agents... 等）
+# 创建Agent
+agent = SimpleAgent(
+    name="智能助手",
+    llm=llm,
+    system_prompt="你是一个有记忆和知识检索能力的AI助手"
+)
+
+# 创建工具注册表
+tool_registry = ToolRegistry()
+
+# 添加记忆工具
+memory_tool = MemoryTool(user_id="user123")
+tool_registry.register_tool(memory_tool)
+
+# 添加RAG工具
+rag_tool = RAGTool(knowledge_base_path="./knowledge_base")
+tool_registry.register_tool(rag_tool)
+
+# 为Agent配置工具
+agent.tool_registry = tool_registry
+
+# 开始对话
+response = agent.run("你好！请记住我叫张三，我是一名Python开发者")
+print(response)

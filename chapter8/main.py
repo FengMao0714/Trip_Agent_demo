@@ -1,24 +1,14 @@
-import os
-from dotenv import load_dotenv
-
-# 必须是这一行！而且要放在所有 hello_agents 导入之前
-load_dotenv()
-
-os.environ["DASHSCOPE_API_KEY"] = "sk-2145b485510a4108bd13268e46ea9f54"
-os.environ["EMBED_API_KEY"] = "sk-2145b485510a4108bd13268e46ea9f54"
-os.environ["EMBED_MODEL_TYPE"] = "dashscope"
-os.environ["EMBED_MODEL_NAME"] = "text-embedding-v3"
-os.environ["MODELSCOPE_API_KEY"] = "sk-2145b485510a4108bd13268e46ea9f54"
-
-# 检查一下（可选，用于调试）
-print(f"DEBUG: 环境变量读取测试 -> {os.getenv('EMBED_API_KEY')[:5] if os.getenv('EMBED_API_KEY') else '未读到'}")
 # 配置好同级文件夹下.env中的大模型API
 from hello_agents import SimpleAgent, HelloAgentsLLM, ToolRegistry
 from hello_agents.tools import MemoryTool, RAGTool
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 
 # 创建LLM实例
-llm = HelloAgentsLLM(provider="modelscope")
+llm = HelloAgentsLLM()
 
 # 创建Agent
 agent = SimpleAgent(
