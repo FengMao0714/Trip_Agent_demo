@@ -1,12 +1,11 @@
 # 配置好同级文件夹下.env中的大模型API
-from hello_agents import SimpleAgent, HelloAgentsLLM, ToolRegistry
-from hello_agents.tools import MemoryTool, RAGTool
+
 from dotenv import load_dotenv
 
 load_dotenv()
 
-
-
+from hello_agents import SimpleAgent, HelloAgentsLLM, ToolRegistry
+from hello_agents.tools import MemoryTool, RAGTool
 # 创建LLM实例
 llm = HelloAgentsLLM()
 
@@ -34,3 +33,7 @@ agent.tool_registry = tool_registry
 # 开始对话
 response = agent.run("你好！请记住我叫张三，我是一名Python开发者")
 print(response)
+
+# 开始测试
+# response1 = agent.run("你好！你还记得我是谁吗？")
+# print(response1)
